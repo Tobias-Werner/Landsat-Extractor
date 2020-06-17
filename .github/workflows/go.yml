@@ -29,7 +29,8 @@ jobs:
     #     fi
 
     - name: Build
-      run: go build -v main.go
+      #run: go build -v main.go
+      run: echo $GOPATH
 
     #- name: Test
     #  run: go test -v x-ploit.de/main.go
