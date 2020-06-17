@@ -10,7 +10,9 @@
             "request": "launch",
             "mode": "auto",
             "program": "${fileDirname}",
-            "env": {},
+            "env": {
+                "GOPATH": "C:\\Users\\info\\go;C:\\Users\\info\\go\\src\\Landsat-Extractor"
+            },
             "args": []
         }
     ]
