@@ -9,6 +9,6 @@ func main() {
 	logger.Create()
 	defer logger.Destroy()
 
-	logger.Info.Println("Test")
+	logger.Info("A message")
 
 }
