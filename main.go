@@ -1,14 +1,14 @@
 package main
 
 import (
-	"Landsat-Extractor/logger"
+	log "Landsat-Extractor/logger"
+	"Landsat-Extractor/mnist"
 )
 
 func main() {
 
-	logger.Create()
-	defer logger.Destroy()
+	defer log.Destroy()
 
-	logger.Info.Print("A message")
-
+	mnist.GetTrainingSet()
+	mnist.GetTestSet()
 }

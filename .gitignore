@@ -1,1 +1,7 @@
+main.exe
 app.log
+go.sum
+mnist/data/train-images-idx3-ubyte
+mnist/data/train-labels-idx1-ubyte
+mnist/data/t10k-images-idx3-ubyte
+mnist/data/t10k-labels-idx1-ubyte
