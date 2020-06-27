@@ -1,7 +1,8 @@
-main.exe
-app.log
+cmd/main.exe
+cmd/__debug_bin
+cmd/app.log
+cmd/data/train-images-idx3-ubyte
+cmd/data/train-labels-idx1-ubyte
+cmd/data/t10k-images-idx3-ubyte
+cmd/data/t10k-labels-idx1-ubyte
 go.sum
-mnist/data/train-images-idx3-ubyte
-mnist/data/train-labels-idx1-ubyte
-mnist/data/t10k-images-idx3-ubyte
-mnist/data/t10k-labels-idx1-ubyte

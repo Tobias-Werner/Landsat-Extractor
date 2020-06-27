@@ -2,17 +2,56 @@ package mnist
 
 import (
 	log "Landsat-Extractor/logger"
+	"compress/gzip"
+	"io"
+	"net/http"
 	"os"
 	"strconv"
 
 	"gonum.org/v1/gonum/mat"
 )
 
+func download(name string) {
+
+	url := "http://yann.lecun.com/exdb/mnist/" + name + ".gz"
+	path := "data/" + name
+
+	resp, err := http.Get(url)
+	if err != nil {
+		panic("Cannot download url " + url)
+	}
+	defer resp.Body.Close()
+
+	file, err := os.Create(path)
+	if err != nil {
+		panic("Cannot create file " + path)
+	}
+	defer file.Close()
+
+	reader, err := gzip.NewReader(resp.Body)
+	if err != nil {
+		panic("Cannot copy decompress")
+	}
+	_, err = io.Copy(file, reader)
+	if err != nil {
+		panic("Cannot copy data to file")
+	}
+}
+
+func dataExists(filePath string) bool {
+
+	os.Mkdir("data", os.ModePerm)
+
+	_, err := os.Stat(filePath)
+	return err == nil
+
+}
+
 // GetTrainingSet provides images and associated labels for training
 func GetTrainingSet() ([]*mat.Dense, []byte) {
 
-	images := loadMNISTImages("mnist/data/train-images-idx3-ubyte")
-	labels := loadMNISTLabels("mnist/data/train-labels-idx1-ubyte")
+	images := loadMNISTImages("train-images-idx3-ubyte")
+	labels := loadMNISTLabels("train-labels-idx1-ubyte")
 
 	return images, labels
 }
@@ -20,15 +59,23 @@ func GetTrainingSet() ([]*mat.Dense, []byte) {
 // GetTestSet provides images and associated labels for evaluation
 func GetTestSet() ([]*mat.Dense, []byte) {
 
-	images := loadMNISTImages("mnist/data/t10k-images-idx3-ubyte")
-	labels := loadMNISTLabels("mnist/data/t10k-labels-idx1-ubyte")
+	images := loadMNISTImages("t10k-images-idx3-ubyte")
+	labels := loadMNISTLabels("t10k-labels-idx1-ubyte")
 
 	return images, labels
 
 }
 
-func loadMNISTLabels(path string) []byte {
+func loadMNISTLabels(name string) []byte {
+
+	path := "data/" + name
+
 	log.Info("Start loading MNIST labels " + path)
+
+	if !dataExists(path) {
+		log.Info(path + " does not exist. Start downloading")
+		download(name)
+	}
 
 	file, error := os.Open(path)
 	if error != nil {
@@ -76,9 +123,16 @@ func loadMNISTLabels(path string) []byte {
 	return labels
 }
 
-func loadMNISTImages(path string) []*mat.Dense {
+func loadMNISTImages(name string) []*mat.Dense {
+
+	path := "data/" + name
 
 	log.Info("Load MNIST images " + path)
+
+	if !dataExists(path) {
+		log.Info(path + " does not exist. Start downloading")
+		download(name)
+	}
 
 	file, error := os.Open(path)
 	if error != nil {
